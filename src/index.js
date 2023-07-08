@@ -3,31 +3,33 @@ import { render } from "react-dom";
 import { TaskList } from "./components/task-list";
 import { NewTaskForm } from "./components/new-task-form";
 import { Footer } from "./components/footer";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import "./components/index.css";
 
 class App extends Component {
+  maxID = 100;
+  date = new Date();
+
   state = {
     todoData: [
-      {
-        label: "Completed task",
-        time: "created 17 seconds ago",
-        status: null,
-        id: 1,
-      },
-      {
-        label: "Editing task",
-        time: "created 5 minutes ago",
-        status: null,
-        id: 2,
-      },
-      {
-        label: "Active task",
-        time: "created 5 minutes ago",
-        status: null,
-        id: 3,
-      },
+      this.createTodoItem("Completed task"),
+      this.createTodoItem("Editing task"),
+      this.createTodoItem("Active task"),
     ],
+    filter: "All",
   };
+
+  createTodoItem(label) {
+    return {
+      label: label,
+      time: `created ${formatDistanceToNow(this.date, {
+        includeSeconds: true,
+        addSuffix: true,
+      })}`,
+      status: null,
+      id: this.maxID++,
+    };
+  }
 
   onTaskClick = (id) => {
     this.setState(({ todoData }) => {
@@ -54,16 +56,62 @@ class App extends Component {
     });
   };
 
+  onTaskAdd = (text) => {
+    const newTask = this.createTodoItem(text);
+    this.setState(({ todoData }) => {
+      const newArr = [...todoData, newTask];
+      return {
+        todoData: newArr,
+      };
+    });
+  };
+
+  filter(items, filter) {
+    switch (filter) {
+      case "All":
+        return items;
+      case "Active":
+        return items.filter((elem) => elem.status === null);
+      case "Completed":
+        return items.filter((elem) => elem.status === "completed");
+      default:
+        return items;
+    }
+  }
+
+  onFilterChange = (filter) => {
+    this.setState({ filter });
+  };
+
+  onAllTasksDelete = () => {
+    this.setState(({ todoData }) => {
+      const newArr = todoData.filter((elem) => elem.status === null);
+      return {
+        todoData: newArr,
+      };
+    });
+  };
+
   render() {
+    const { todoData, filter } = this.state;
+    const visibleItems = this.filter(todoData, filter);
+    const isActiveItems = todoData.filter(
+      (elem) => elem.status === null
+    ).length;
     return (
       <section className="main">
-        <NewTaskForm />
+        <NewTaskForm onAdded={this.onTaskAdd} />
         <TaskList
-          todo={this.state}
+          todo={visibleItems}
           onCheked={(id) => this.onTaskClick(id)}
           onDeleted={(id) => this.onTaskDelete(id)}
         />
-        <Footer />
+        <Footer
+          activeItems={isActiveItems}
+          filter={filter}
+          onFilterChange={this.onFilterChange}
+          onAllDelete={this.onAllTasksDelete}
+        />
       </section>
     );
   }

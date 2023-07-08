@@ -4,7 +4,7 @@ import { Task } from "./task";
 export class TaskList extends Component {
   render() {
     const { todo, onCheked, onDeleted } = this.props;
-    const elements = todo.todoData.map((elem) => {
+    const elements = todo.map((elem) => {
       let styleName = elem.status;
       if (elem.status === "completed") {
         styleName = "completed";
