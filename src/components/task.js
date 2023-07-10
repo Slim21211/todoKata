@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import PropTypes from 'prop-types';
 
 export class Task extends Component {
   state = {
@@ -29,10 +29,10 @@ export class Task extends Component {
   render() {
     const { time, styleName, onCheked, onDeleted } = this.props;
     return (
-      <li className={!this.state.edit ? styleName : "editing"}>
+      <li className={!this.state.edit ? styleName : 'editing'}>
         <div className="view">
           <input
-            checked={styleName === "completed" ? true : false}
+            checked={styleName === 'completed' ? true : false}
             className="toggle"
             type="checkbox"
             onChange={onCheked}
@@ -51,12 +51,7 @@ export class Task extends Component {
         </div>
         {this.state.edit ? (
           <form onSubmit={this.submitTask}>
-            <input
-              type="text"
-              className="edit"
-              value={this.state.label}
-              onInput={this.changeTask}
-            ></input>
+            <input type="text" className="edit" value={this.state.label} onInput={this.changeTask}></input>
           </form>
         ) : null}
       </li>

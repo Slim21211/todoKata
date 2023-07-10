@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { TaskFilter } from "./task-filter";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { TaskFilter } from './task-filter';
 
 export class Footer extends Component {
   render() {
@@ -18,7 +19,7 @@ export class Footer extends Component {
 }
 
 Footer.defaultProps = {
-  filter: "All",
+  filter: 'All',
 };
 
 Footer.propTypes = {

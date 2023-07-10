@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Task } from "./task";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { Task } from './task';
 
 export class TaskList extends Component {
   render() {

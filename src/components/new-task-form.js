@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class NewTaskForm extends Component {
   state = {
-    label: "",
+    label: '',
   };
   onInputChange = (event) => {
     this.setState({
@@ -14,7 +14,7 @@ export class NewTaskForm extends Component {
     event.preventDefault();
     this.props.onAdded(this.state.label);
     this.setState({
-      label: "",
+      label: '',
     });
   };
   render() {
@@ -37,8 +37,8 @@ export class NewTaskForm extends Component {
 }
 
 NewTaskForm.defaultProps = {
-  placeholder: "What needs to be done?",
-  title: "todos",
+  placeholder: 'What needs to be done?',
+  title: 'todos',
 };
 
 NewTaskForm.propTypes = {

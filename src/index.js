@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import { createRoot } from "react-dom/client";
-import { TaskList } from "./components/task-list";
-import { NewTaskForm } from "./components/new-task-form";
-import { Footer } from "./components/footer";
-import "./components/index.css";
+import React, { Component } from 'react';
+import { createRoot } from 'react-dom/client';
+
+import { TaskList } from './components/task-list';
+import { NewTaskForm } from './components/new-task-form';
+import { Footer } from './components/footer';
+import './components/index.css';
 
 class App extends Component {
   maxID = 100;
 
   state = {
     todoData: [],
-    filter: "All",
+    filter: 'All',
   };
 
   createTodoItem(label) {
@@ -26,8 +27,8 @@ class App extends Component {
     this.setState(({ todoData }) => {
       todoData.map((elem) => {
         if (elem.id === id && elem.status === null) {
-          elem.status = "completed";
-        } else if (elem.id === id && elem.status === "completed") {
+          elem.status = 'completed';
+        } else if (elem.id === id && elem.status === 'completed') {
           elem.status = null;
         }
       });
@@ -59,14 +60,14 @@ class App extends Component {
 
   filter(items, filter) {
     switch (filter) {
-      case "All":
-        return items;
-      case "Active":
-        return items.filter((elem) => elem.status === null);
-      case "Completed":
-        return items.filter((elem) => elem.status === "completed");
-      default:
-        return items;
+    case 'All':
+      return items;
+    case 'Active':
+      return items.filter((elem) => elem.status === null);
+    case 'Completed':
+      return items.filter((elem) => elem.status === 'completed');
+    default:
+      return items;
     }
   }
 
@@ -86,16 +87,10 @@ class App extends Component {
   render() {
     const { todoData, filter } = this.state;
     const visibleItems = this.filter(todoData, filter);
-    const isActiveItems = todoData.filter(
-      (elem) => elem.status === null
-    ).length;
+    const isActiveItems = todoData.filter((elem) => elem.status === null).length;
     return (
       <section className="main">
-        <NewTaskForm
-          title="todos"
-          placeholder="What needs to be done?"
-          onAdded={this.onTaskAdd}
-        />
+        <NewTaskForm title="todos" placeholder="What needs to be done?" onAdded={this.onTaskAdd} />
         <TaskList
           todo={visibleItems}
           onCheked={(id) => this.onTaskClick(id)}
@@ -111,6 +106,6 @@ class App extends Component {
     );
   }
 }
-const container = document.getElementById("root");
+const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(<App />);
