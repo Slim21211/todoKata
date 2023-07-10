@@ -1,31 +1,22 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { TaskList } from "./components/task-list";
 import { NewTaskForm } from "./components/new-task-form";
 import { Footer } from "./components/footer";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import "./components/index.css";
 
 class App extends Component {
   maxID = 100;
-  date = new Date();
 
   state = {
-    todoData: [
-      this.createTodoItem("Completed task"),
-      this.createTodoItem("Editing task"),
-      this.createTodoItem("Active task"),
-    ],
+    todoData: [],
     filter: "All",
   };
 
   createTodoItem(label) {
     return {
       label: label,
-      time: `created ${formatDistanceToNow(this.date, {
-        includeSeconds: true,
-        addSuffix: true,
-      })}`,
+      time: new Date(),
       status: null,
       id: this.maxID++,
     };
@@ -100,7 +91,11 @@ class App extends Component {
     ).length;
     return (
       <section className="main">
-        <NewTaskForm onAdded={this.onTaskAdd} />
+        <NewTaskForm
+          title="todos"
+          placeholder="What needs to be done?"
+          onAdded={this.onTaskAdd}
+        />
         <TaskList
           todo={visibleItems}
           onCheked={(id) => this.onTaskClick(id)}
@@ -116,5 +111,6 @@ class App extends Component {
     );
   }
 }
-
-render(<App />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<App />);

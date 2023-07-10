@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export class NewTaskForm extends Component {
   state = {
@@ -17,13 +18,14 @@ export class NewTaskForm extends Component {
     });
   };
   render() {
+    const { title, placeholder } = this.props;
     return (
       <header className="header">
-        <h1>todos</h1>
+        <h1>{title}</h1>
         <form onSubmit={this.onSubmit}>
           <input
             className="new-todo"
-            placeholder="What needs to be done?"
+            placeholder={placeholder}
             autoFocus
             onInput={this.onInputChange}
             value={this.state.label}
@@ -33,3 +35,15 @@ export class NewTaskForm extends Component {
     );
   }
 }
+
+NewTaskForm.defaultProps = {
+  placeholder: "What needs to be done?",
+  title: "todos",
+};
+
+NewTaskForm.propTypes = {
+  placeholder: PropTypes.string,
+  title: PropTypes.string,
+  onInputChange: PropTypes.func,
+  onSubmit: PropTypes.func,
+};

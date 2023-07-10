@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { TaskFilter } from "./task-filter";
+import PropTypes from "prop-types";
 
 export class Footer extends Component {
   render() {
@@ -15,3 +16,14 @@ export class Footer extends Component {
     );
   }
 }
+
+Footer.defaultProps = {
+  filter: "All",
+};
+
+Footer.propTypes = {
+  filter: PropTypes.string,
+  activeItems: PropTypes.number,
+  onFilterChange: PropTypes.func,
+  onAllDelete: PropTypes.func,
+};
