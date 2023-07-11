@@ -1,1 +1,1 @@
-https://todo-theta-taupe.vercel.app/
+https://todo-kata-rouge.vercel.app/
