@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import './new-task-form.css';
 
 export class NewTaskForm extends Component {
   state = {
@@ -7,25 +8,26 @@ export class NewTaskForm extends Component {
   };
   onInputChange = (event) => {
     this.setState({
-      label: event.target.value,
+      label: event.target.value.trimStart(),
     });
   };
   onSubmit = (event) => {
     event.preventDefault();
-    this.props.onAdded(this.state.label);
+    if (this.state.label) {
+      this.props.onAdded(this.state.label);
+    }
     this.setState({
       label: '',
     });
   };
   render() {
-    const { title, placeholder } = this.props;
     return (
-      <header className="header">
-        <h1>{title}</h1>
+      <header>
+        <h1>todos</h1>
         <form onSubmit={this.onSubmit}>
           <input
             className="new-todo"
-            placeholder={placeholder}
+            placeholder="What needs to be done?"
             autoFocus
             onInput={this.onInputChange}
             value={this.state.label}
@@ -37,13 +39,9 @@ export class NewTaskForm extends Component {
 }
 
 NewTaskForm.defaultProps = {
-  placeholder: 'What needs to be done?',
-  title: 'todos',
+  onAdded: () => {},
 };
 
 NewTaskForm.propTypes = {
-  placeholder: PropTypes.string,
-  title: PropTypes.string,
-  onInputChange: PropTypes.func,
-  onSubmit: PropTypes.func,
+  onAdded: PropTypes.func,
 };

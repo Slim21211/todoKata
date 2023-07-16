@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import PropTypes from 'prop-types';
+import './task.css';
 
 export class Task extends Component {
   state = {
@@ -26,17 +27,13 @@ export class Task extends Component {
       edit: false,
     });
   };
+
   render() {
     const { time, styleName, onCheked, onDeleted } = this.props;
     return (
       <li className={!this.state.edit ? styleName : 'editing'}>
         <div className="view">
-          <input
-            checked={styleName === 'completed' ? true : false}
-            className="toggle"
-            type="checkbox"
-            onChange={onCheked}
-          ></input>
+          <input checked={styleName === 'completed'} className="toggle" type="checkbox" onChange={onCheked}></input>
           <label>
             <span className="description">{this.state.label}</span>
             <span className="created">
@@ -60,12 +57,21 @@ export class Task extends Component {
 }
 
 Task.defaultProps = {
+  label: 'New task',
   time: new Date(),
   styleName: null,
+  key: Math.floor(Math.random() * 100),
+  onCheked: () => {},
+  onDeleted: () => {},
+  onEdit: () => {},
 };
 
 Task.propTypes = {
+  label: PropTypes.string,
   time: PropTypes.string,
+  styleName: PropTypes.string,
+  key: PropTypes.number,
   onCheked: PropTypes.func,
   onDeleted: PropTypes.func,
+  onEdit: PropTypes.func,
 };
