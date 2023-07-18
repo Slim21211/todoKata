@@ -13,9 +13,7 @@ export class NewTaskForm extends Component {
   };
   onSubmit = (event) => {
     event.preventDefault();
-    if (this.state.label) {
-      this.props.onAdded(this.state.label);
-    }
+    this.props.onAdded(this.state.label);
     this.setState({
       label: '',
     });
@@ -29,6 +27,7 @@ export class NewTaskForm extends Component {
             className="new-todo"
             placeholder="What needs to be done?"
             autoFocus
+            required
             onInput={this.onInputChange}
             value={this.state.label}
           ></input>
