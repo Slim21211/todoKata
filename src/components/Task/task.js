@@ -7,6 +7,8 @@ export class Task extends Component {
   state = {
     edit: false,
     label: this.props.label,
+    minutes: this.props.minutes,
+    seconds: this.props.seconds,
   };
 
   onTaskEdit = () => {
@@ -28,6 +30,31 @@ export class Task extends Component {
     });
   };
 
+  startTimer = () => {
+    this.timer = setInterval(() => {
+      this.setState({
+        seconds: this.state.seconds - 1,
+      });
+      if (this.state.seconds === 0) {
+        this.setState({
+          minutes: this.state.minutes - 1,
+          seconds: 59,
+        });
+      }
+      if (this.state.minutes === 0 && this.state.seconds === 1) {
+        clearInterval(this.timer);
+      }
+    }, 1000);
+  };
+
+  pauseTimer = () => {
+    clearInterval(this.timer);
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   render() {
     const { time, styleName, onCheked, onDeleted } = this.props;
     return (
@@ -35,8 +62,14 @@ export class Task extends Component {
         <div className="view">
           <input checked={styleName === 'completed'} className="toggle" type="checkbox" onChange={onCheked}></input>
           <label>
-            <span className="description">{this.state.label}</span>
-            <span className="created">
+            <span className="title">{this.state.label}</span>
+            <span className="description">
+              <button className="icon icon-play" onClick={this.startTimer}></button>
+              <button className="icon icon-pause" onClick={this.pauseTimer}></button>
+              {this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}:
+              {this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}
+            </span>
+            <span className="description">
               {`created ${formatDistanceToNow(time, {
                 includeSeconds: true,
                 addSuffix: true,
@@ -60,6 +93,8 @@ Task.defaultProps = {
   label: 'New task',
   time: new Date(),
   styleName: null,
+  min: 0,
+  sec: 0,
   onCheked: () => {},
   onDeleted: () => {},
   onEdit: () => {},
@@ -67,8 +102,10 @@ Task.defaultProps = {
 
 Task.propTypes = {
   label: PropTypes.string,
-  time: PropTypes.string,
+  time: PropTypes.instanceOf(Date),
   styleName: PropTypes.string,
+  min: PropTypes.number,
+  sec: PropTypes.number,
   onCheked: PropTypes.func,
   onDeleted: PropTypes.func,
   onEdit: PropTypes.func,

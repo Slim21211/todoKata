@@ -13,12 +13,14 @@ export class App extends Component {
     filter: 'All',
   };
 
-  createTodoItem(label) {
+  createTodoItem(label, min, sec) {
     return {
       label: label,
       time: new Date(),
       isActive: true,
       id: this.maxID++,
+      minutes: min,
+      seconds: sec,
     };
   }
 
@@ -44,8 +46,8 @@ export class App extends Component {
     });
   };
 
-  onTaskAdd = (text) => {
-    const newTask = this.createTodoItem(text);
+  onTaskAdd = (text, min, sec) => {
+    const newTask = this.createTodoItem(text, min, sec);
     this.setState(({ todoData }) => {
       const newArr = [...todoData, newTask];
       return {
