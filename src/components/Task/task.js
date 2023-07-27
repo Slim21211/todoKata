@@ -7,8 +7,6 @@ export class Task extends Component {
   state = {
     edit: false,
     label: this.props.label,
-    minutes: this.props.minutes,
-    seconds: this.props.seconds,
   };
 
   onTaskEdit = () => {
@@ -30,33 +28,8 @@ export class Task extends Component {
     });
   };
 
-  startTimer = () => {
-    this.timer = setInterval(() => {
-      this.setState({
-        seconds: this.state.seconds - 1,
-      });
-      if (this.state.seconds === 0) {
-        this.setState({
-          minutes: this.state.minutes - 1,
-          seconds: 59,
-        });
-      }
-      if (this.state.minutes === 0 && this.state.seconds === 1) {
-        clearInterval(this.timer);
-      }
-    }, 1000);
-  };
-
-  pauseTimer = () => {
-    clearInterval(this.timer);
-  };
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
   render() {
-    const { time, styleName, onCheked, onDeleted } = this.props;
+    const { time, styleName, onCheked, onDeleted, startTimer, pauseTimer, minutes, seconds } = this.props;
     return (
       <li className={!this.state.edit ? styleName : 'editing'}>
         <div className="view">
@@ -64,10 +37,9 @@ export class Task extends Component {
           <label>
             <span className="title">{this.state.label}</span>
             <span className="description">
-              <button className="icon icon-play" onClick={this.startTimer}></button>
-              <button className="icon icon-pause" onClick={this.pauseTimer}></button>
-              {this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}:
-              {this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}
+              <button className="icon icon-play" onClick={startTimer}></button>
+              <button className="icon icon-pause" onClick={pauseTimer}></button>
+              {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
             </span>
             <span className="description">
               {`created ${formatDistanceToNow(time, {

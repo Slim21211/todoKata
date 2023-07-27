@@ -11,6 +11,7 @@ export class App extends Component {
   state = {
     todoData: [],
     filter: 'All',
+    isTimerOn: false,
   };
 
   createTodoItem(label, min, sec) {
@@ -82,6 +83,34 @@ export class App extends Component {
     });
   };
 
+  startTimer = (id) => {
+    if (!this.state.isTimerOn) {
+      this.timer = setInterval(() => {
+        this.setState(({ todoData }) => {
+          const idx = todoData.findIndex((elem) => elem.id === id);
+          const oldItem = todoData[idx];
+          let newItem = { ...oldItem, seconds: oldItem.seconds - 1 };
+          if (newItem.seconds < 0) {
+            newItem = { ...newItem, minutes: oldItem.minutes - 1, seconds: 59 };
+          }
+          if (newItem.seconds === 0 && newItem.minutes === 0) {
+            clearInterval(this.timer);
+          }
+          const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+          return {
+            todoData: newArr,
+            isTimerOn: true,
+          };
+        });
+      }, 1000);
+    }
+  };
+
+  pauseTimer = () => {
+    clearInterval(this.timer);
+    this.setState({ isTimerOn: false });
+  };
+
   render() {
     const { todoData, filter } = this.state;
     const visibleItems = this.filter(todoData, filter);
@@ -93,6 +122,8 @@ export class App extends Component {
           todo={visibleItems}
           onCheked={(id) => this.onTaskClick(id)}
           onDeleted={(id) => this.onTaskDelete(id)}
+          startTimer={(id) => this.startTimer(id)}
+          pauseTimer={(id) => this.pauseTimer(id)}
         />
         <Footer
           activeItems={isActiveItems}

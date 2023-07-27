@@ -5,8 +5,13 @@ import { Task } from '../Task/task';
 import './task-list.css';
 
 export class TaskList extends Component {
+  state = {
+    minutes: this.props.todo.minutes,
+    seconds: this.props.todo.seconds,
+  };
+
   render() {
-    const { todo, onCheked, onDeleted } = this.props;
+    const { todo, onCheked, onDeleted, startTimer, pauseTimer } = this.props;
     const elements = todo.map((elem) => {
       const { label, time, isActive, id, minutes, seconds } = elem;
       return (
@@ -17,9 +22,11 @@ export class TaskList extends Component {
           key={id}
           minutes={minutes}
           seconds={seconds}
-          onCheked={() => onCheked(elem.id)}
-          onDeleted={() => onDeleted(elem.id)}
-          onEdit={() => this.onTaskEdit(elem.id)}
+          onCheked={() => onCheked(id)}
+          onDeleted={() => onDeleted(id)}
+          startTimer={() => startTimer(id)}
+          pauseTimer={() => pauseTimer(id)}
+          onEdit={() => this.onTaskEdit(id)}
         />
       );
     });

@@ -26,26 +26,22 @@ export class NewTaskForm extends Component {
   };
 
   onChangeMinute = (event) => {
-    if (event.target.value >= 0) {
-      this.setState({
-        minutes: Number(event.target.value),
-      });
-    }
+    this.setState({
+      minutes: Number(event.target.value),
+    });
   };
 
   onChangeSecond = (event) => {
-    if (event.target.value >= 0 && event.target.value < 60) {
-      this.setState({
-        seconds: Number(event.target.value),
-      });
-    }
+    this.setState({
+      seconds: event.target.value,
+    });
   };
 
   render() {
     return (
       <header>
         <h1>todos</h1>
-        <form onSubmit={this.onSubmit}>
+        <form className="new-todo-form" onSubmit={this.onSubmit}>
           <input
             className="new-todo"
             placeholder="What needs to be done?"
@@ -57,17 +53,20 @@ export class NewTaskForm extends Component {
           <input
             className="new-todo-form__timer"
             placeholder="Min"
+            type="number"
+            min={0}
             onChange={this.onChangeMinute}
             value={this.state.minutes}
             required
           ></input>
           <input
             className="new-todo-form__timer"
+            type="number"
             placeholder="Sec"
             onChange={this.onChangeSecond}
             value={this.state.seconds}
             min={0}
-            max={60}
+            max={59}
             required
           ></input>
           <button type="submit" />
