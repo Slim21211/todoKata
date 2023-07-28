@@ -95,6 +95,7 @@ export class App extends Component {
           }
           if (newItem.seconds === 0 && newItem.minutes === 0) {
             clearInterval(this.timer);
+            this.setState({ isTimerOn: false });
           }
           const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
           return {
@@ -123,7 +124,7 @@ export class App extends Component {
           onCheked={(id) => this.onTaskClick(id)}
           onDeleted={(id) => this.onTaskDelete(id)}
           startTimer={(id) => this.startTimer(id)}
-          pauseTimer={(id) => this.pauseTimer(id)}
+          pauseTimer={() => this.pauseTimer()}
         />
         <Footer
           activeItems={isActiveItems}

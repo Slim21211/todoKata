@@ -25,7 +25,7 @@ export class TaskList extends Component {
           onCheked={() => onCheked(id)}
           onDeleted={() => onDeleted(id)}
           startTimer={() => startTimer(id)}
-          pauseTimer={() => pauseTimer(id)}
+          pauseTimer={() => pauseTimer()}
           onEdit={() => this.onTaskEdit(id)}
         />
       );
