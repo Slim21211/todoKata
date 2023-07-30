@@ -65,7 +65,7 @@ export class NewTaskForm extends Component {
             placeholder="Sec"
             onChange={this.onChangeSecond}
             value={this.state.seconds}
-            min={0}
+            min={1}
             max={59}
             required
           ></input>
