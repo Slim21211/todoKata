@@ -1,65 +1,56 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import PropTypes from 'prop-types';
 import './task.css';
 
-export class Task extends Component {
-  state = {
-    edit: false,
-    label: this.props.label,
+export const Task = ({ label, time, styleName, onCheked, onDeleted, startTimer, pauseTimer, minutes, seconds }) => {
+  const [edit, setEdit] = useState(false);
+  const [stateLabel, setStateLabel] = useState(label);
+
+  const onTaskEdit = () => {
+    () => setEdit(true);
   };
 
-  onTaskEdit = () => {
-    this.setState({
-      edit: true,
-    });
+  const changeTask = (event) => {
+    () => setStateLabel(event.target.value);
   };
 
-  changeTask = (event) => {
-    this.setState({
-      label: event.target.value,
-    });
+  const submitTask = (event) => {
+    () => {
+      event.preventDefault;
+      setEdit(false);
+    };
   };
 
-  submitTask = (event) => {
-    event.preventDefault();
-    this.setState({
-      edit: false,
-    });
-  };
-
-  render() {
-    const { time, styleName, onCheked, onDeleted, startTimer, pauseTimer, minutes, seconds } = this.props;
-    return (
-      <li className={!this.state.edit ? styleName : 'editing'}>
-        <div className="view">
-          <input checked={styleName === 'completed'} className="toggle" type="checkbox" onChange={onCheked}></input>
-          <label>
-            <span className="title">{this.state.label}</span>
-            <span className="description">
-              <button className="icon icon-play" onClick={startTimer}></button>
-              <button className="icon icon-pause" onClick={pauseTimer}></button>
-              {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-            </span>
-            <span className="description">
-              {`created ${formatDistanceToNow(time, {
-                includeSeconds: true,
-                addSuffix: true,
-              })}`}
-            </span>
-          </label>
-          <button className="icon icon-edit" onClick={this.onTaskEdit}></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
-        </div>
-        {this.state.edit ? (
-          <form onSubmit={this.submitTask}>
-            <input type="text" className="edit" value={this.state.label} onInput={this.changeTask}></input>
-          </form>
-        ) : null}
-      </li>
-    );
-  }
-}
+  return (
+    <li className={!edit ? styleName : 'editing'}>
+      <div className="view">
+        <input checked={styleName === 'completed'} className="toggle" type="checkbox" onChange={onCheked}></input>
+        <label>
+          <span className="title">{stateLabel}</span>
+          <span className="description">
+            <button className="icon icon-play" onClick={startTimer}></button>
+            <button className="icon icon-pause" onClick={pauseTimer}></button>
+            {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+          </span>
+          <span className="description">
+            {`created ${formatDistanceToNow(time, {
+              includeSeconds: true,
+              addSuffix: true,
+            })}`}
+          </span>
+        </label>
+        <button className="icon icon-edit" onClick={onTaskEdit}></button>
+        <button className="icon icon-destroy" onClick={onDeleted}></button>
+      </div>
+      {edit ? (
+        <form onSubmit={submitTask}>
+          <input type="text" className="edit" value={label} onInput={changeTask}></input>
+        </form>
+      ) : null}
+    </li>
+  );
+};
 
 Task.defaultProps = {
   label: 'New task',
