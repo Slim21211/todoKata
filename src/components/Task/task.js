@@ -8,18 +8,16 @@ export const Task = ({ label, time, styleName, onCheked, onDeleted, startTimer, 
   const [stateLabel, setStateLabel] = useState(label);
 
   const onTaskEdit = () => {
-    () => setEdit(true);
+    setEdit(true);
   };
 
   const changeTask = (event) => {
-    () => setStateLabel(event.target.value);
+    setStateLabel(event.target.value);
   };
 
   const submitTask = (event) => {
-    () => {
-      event.preventDefault;
-      setEdit(false);
-    };
+    event.preventDefault;
+    setEdit(false);
   };
 
   return (
@@ -45,7 +43,7 @@ export const Task = ({ label, time, styleName, onCheked, onDeleted, startTimer, 
       </div>
       {edit ? (
         <form onSubmit={submitTask}>
-          <input type="text" className="edit" value={label} onInput={changeTask}></input>
+          <input type="text" className="edit" value={stateLabel} onInput={changeTask}></input>
         </form>
       ) : null}
     </li>

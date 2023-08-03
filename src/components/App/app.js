@@ -1,92 +1,83 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { NewTaskForm } from '../New-task-form/new-task-form';
 import { TaskList } from '../Task-list/task-list';
 import { Footer } from '../Footer/footer';
 import './app.css';
 
-export class App extends Component {
-  maxID = 100;
+export const App = () => {
+  const [todoData, setTodoData] = useState([]);
+  const [stateFilter, setStateFilter] = useState('All');
+  const [isTimerOn, setIsTimerOn] = useState(false);
 
-  state = {
-    todoData: [],
-    filter: 'All',
-    isTimerOn: false,
-  };
+  const ref = useRef();
 
-  createTodoItem(label, min, sec) {
+  useEffect(() => {
+    ref.current = 1;
+  }, []);
+
+  const createTodoItem = (label, min, sec) => {
     return {
       label: label,
       time: new Date(),
       isActive: true,
-      id: this.maxID++,
+      id: Math.floor(Math.random() * 100),
       minutes: min,
       seconds: sec,
     };
-  }
+  };
 
-  onTaskClick = (id) => {
-    this.setState(({ todoData }) => {
+  const onTaskClick = (id) => {
+    setTodoData((todoData) => {
       const idx = todoData.findIndex((elem) => elem.id === id);
       const oldItem = todoData[idx];
       const newItem = { ...oldItem, isActive: !oldItem.isActive };
-      const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
-      return {
-        todoData: newArr,
-      };
+      return [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
     });
   };
 
-  onTaskDelete = (id) => {
-    this.setState(({ todoData }) => {
+  const onTaskDelete = (id) => {
+    setTodoData((todoData) => {
       const idx = todoData.findIndex((elem) => elem.id === id);
-      const newArr = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
-      return {
-        todoData: newArr,
-      };
+      return [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
     });
   };
 
-  onTaskAdd = (text, min, sec) => {
-    const newTask = this.createTodoItem(text, min, sec);
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newTask];
-      return {
-        todoData: newArr,
-      };
+  const onTaskAdd = (text, min, sec) => {
+    const newTask = createTodoItem(text, min, sec);
+    setTodoData((todoData) => {
+      return [...todoData, newTask];
     });
   };
 
-  filter(items, filter) {
+  const filter = (items, filter) => {
     switch (filter) {
-    case 'All':
-      return items;
-    case 'Active':
-      return items.filter((elem) => elem.isActive);
-    case 'Completed':
-      return items.filter((elem) => !elem.isActive);
-    default:
-      return items;
+      case 'All':
+        return items;
+      case 'Active':
+        return items.filter((elem) => elem.isActive);
+      case 'Completed':
+        return items.filter((elem) => !elem.isActive);
+      default:
+        return items;
     }
-  }
-
-  onFilterChange = (filter) => {
-    this.setState({ filter });
   };
 
-  onAllTasksDelete = () => {
-    this.setState(({ todoData }) => {
-      const newArr = todoData.filter((elem) => elem.isActive);
-      return {
-        todoData: newArr,
-      };
+  const onFilterChange = (filter) => {
+    setStateFilter(filter);
+  };
+
+  const onAllTasksDelete = () => {
+    setTodoData((todoData) => {
+      return todoData.filter((elem) => elem.isActive);
     });
   };
 
-  startTimer = (id) => {
-    if (!this.state.isTimerOn) {
-      this.timer = setInterval(() => {
-        this.setState(({ todoData }) => {
+  const startTimer = (id) => {
+    if (!isTimerOn) {
+      setIsTimerOn(true);
+      ref.current = setInterval(() => {
+        setTodoData((todoData) => {
           const idx = todoData.findIndex((elem) => elem.id === id);
           const oldItem = todoData[idx];
           let newItem = { ...oldItem, seconds: oldItem.seconds - 1 };
@@ -94,45 +85,38 @@ export class App extends Component {
             newItem = { ...newItem, minutes: oldItem.minutes - 1, seconds: 59 };
           }
           if (newItem.seconds === 0 && newItem.minutes === 0) {
-            clearInterval(this.timer);
-            this.setState({ isTimerOn: false });
+            clearInterval(ref.current);
+            setIsTimerOn(false);
           }
-          const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
-          return {
-            todoData: newArr,
-            isTimerOn: true,
-          };
+          return [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
         });
       }, 1000);
     }
   };
 
-  pauseTimer = () => {
-    clearInterval(this.timer);
-    this.setState({ isTimerOn: false });
+  const pauseTimer = () => {
+    clearInterval(ref.current);
+    setIsTimerOn(false);
   };
 
-  render() {
-    const { todoData, filter } = this.state;
-    const visibleItems = this.filter(todoData, filter);
-    const isActiveItems = todoData.filter((elem) => elem.isActive).length;
-    return (
-      <section className="main">
-        <NewTaskForm onAdded={this.onTaskAdd} />
-        <TaskList
-          todo={visibleItems}
-          onCheked={(id) => this.onTaskClick(id)}
-          onDeleted={(id) => this.onTaskDelete(id)}
-          startTimer={(id) => this.startTimer(id)}
-          pauseTimer={() => this.pauseTimer()}
-        />
-        <Footer
-          activeItems={isActiveItems}
-          filter={filter}
-          onFilterChange={this.onFilterChange}
-          onAllDelete={this.onAllTasksDelete}
-        />
-      </section>
-    );
-  }
-}
+  const visibleItems = filter(todoData, stateFilter);
+  const isActiveItems = todoData.filter((elem) => elem.isActive).length;
+  return (
+    <section className="main">
+      <NewTaskForm onAdded={onTaskAdd} />
+      <TaskList
+        todo={visibleItems}
+        onCheked={(id) => onTaskClick(id)}
+        onDeleted={(id) => onTaskDelete(id)}
+        startTimer={(id) => startTimer(id)}
+        pauseTimer={() => pauseTimer()}
+      />
+      <Footer
+        activeItems={isActiveItems}
+        filter={stateFilter}
+        onFilterChange={onFilterChange}
+        onAllDelete={onAllTasksDelete}
+      />
+    </section>
+  );
+};

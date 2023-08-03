@@ -19,7 +19,6 @@ export const TaskList = ({ todo, onCheked, onDeleted, startTimer, pauseTimer }) 
         onDeleted={() => onDeleted(id)}
         startTimer={() => startTimer(id)}
         pauseTimer={() => pauseTimer()}
-        onEdit={() => this.onTaskEdit(id)}
       />
     );
   });
