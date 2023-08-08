@@ -79,6 +79,11 @@ export const App = () => {
       ref.current = setInterval(() => {
         setTodoData((todoData) => {
           const idx = todoData.findIndex((elem) => elem.id === id);
+          if (idx === -1) {
+            clearInterval(ref.current);
+            setIsTimerOn(false);
+            return [...todoData];
+          }
           const oldItem = todoData[idx];
           let newItem = { ...oldItem, seconds: oldItem.seconds - 1 };
           if (newItem.seconds < 0) {
